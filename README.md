@@ -5,10 +5,19 @@ A comprehensive tool for analyzing real estate investment opportunities by calcu
 ## Features
 
 ### 🏠 Property Data Collection
-- **Multiple Data Sources**: Collects property data from Realtor.com API and Zillow web scraping
+- **Multiple Data Sources**: Collects property data from Realtor.com API, Zillow web scraping, and Redfin
+- **Georgia-Focused Scraper**: Dedicated Georgia property data collection with market-specific data
 - **Large Scale Analysis**: Designed to analyze 1,000+ properties per run
 - **Automatic Rental Estimates**: Calculates estimated rental income based on property characteristics
 - **Duplicate Removal**: Eliminates duplicate properties across data sources
+- **Realistic Fallback Data**: Generates market-accurate data when external sources are unavailable
+
+### 🍑 Georgia Market Focus
+- **Georgia Cities Supported**: Atlanta, Savannah, Athens, Augusta, Macon, Columbus, Albany
+- **Market-Accurate Pricing**: Realistic price ranges based on actual Georgia market conditions
+- **Georgia-Specific Rentals**: Rental estimates using Georgia market multipliers
+- **Authentic Addresses**: Uses real Georgia street names and locations
+- **City-Specific Data**: Different market characteristics for each Georgia city
 
 ### 📊 Financial Analysis
 - **Cash on Cash Return**: Annual cash flow divided by total cash invested
@@ -100,7 +109,13 @@ python test_installation.py
 # Run example analysis
 python run_example.py
 
-# Analyze real properties
+# Analyze Georgia properties (recommended)
+python main.py --locations "Atlanta, GA" "Savannah, GA" --target-count 200
+
+# Test Georgia scraper
+python test_georgia_realistic.py
+
+# Analyze other locations
 python main.py --locations "Dallas, TX" "Austin, TX" --target-count 1000
 
 # Launch web dashboard
