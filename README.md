@@ -4,6 +4,8 @@
 
 This is a comprehensive automated real estate underwriting system that implements exact Google Sheets formulas and calculation methodology. The system provides complete property analysis, scenario modeling, optimization recommendations, and risk assessment for real estate investment decisions.
 
+**Primary Goal**: Ingest data in real-time or once daily, and identify the top deals for clients based on their specific goals (total return, cash on cash return, etc.).
+
 ## Features
 
 ### 🏠 **Automated Underwriting Engine**
@@ -42,6 +44,18 @@ This is a comprehensive automated real estate underwriting system that implement
 - Interactive charts and visualizations
 - Scenario comparison tools
 - Optimization opportunity display
+
+### 🔄 **Real-Time Data Ingestion**
+- Daily property data collection from multiple sources
+- Automated data validation and cleaning
+- Real-time market condition monitoring
+- Continuous deal identification and ranking
+
+### 🎯 **Intelligent Deal Identification**
+- Client-specific goal matching (CoC return, total return, etc.)
+- Automated ranking and prioritization
+- Real-time deal scoring and alerts
+- Historical performance tracking
 
 ## Installation
 
@@ -105,6 +119,18 @@ When running the dashboard mode, access the application at:
    - Command-line interface
    - Complete system orchestration
    - Results display and reporting
+
+### Data Flow Architecture
+
+```
+Data Sources → Ingestion Pipeline → Validation → Analysis Engine → Dashboard → Client Reports
+```
+
+**Data Sources**: MLS, Zillow, Realtor.com, Local Databases
+**Ingestion Pipeline**: Daily automated collection and validation
+**Analysis Engine**: Real-time deal scoring and ranking
+**Dashboard**: Interactive visualization and reporting
+**Client Reports**: Automated recommendations and alerts
 
 ### Data Models
 
