@@ -1,0 +1,107 @@
+# NIA Indexing Rules for Real Estate Investment Analysis System
+
+## Project Overview
+This is a comprehensive automated real estate underwriting system that implements exact Google Sheets formulas and calculation methodology. The system provides complete property analysis, scenario modeling, optimization recommendations, and risk assessment for real estate investment decisions.
+
+## Core Components
+
+### Main Application Files
+- `main.py` - Entry point with CLI interface for analysis, dashboard, and testing
+- `src/underwriting_engine.py` - Core calculation engine with exact Google Sheets formulas
+- `src/property_sourcer.py` - Property data generation and client scenario matching
+- `src/automated_dashboard.py` - Interactive Dash web dashboard
+- `src/create_csv_templates.py` - CSV file generation for underwriting templates
+- `src/create_google_sheets_final.py` - Google Sheets compatible CSV generation
+
+### Documentation
+- `README.md` - Comprehensive system documentation and usage guide
+- `APPLICATION.md` - Direct answers to client scenarios with property recommendations
+- `CHANGELOG.md` - Version history and development timeline
+- `.vscode/launch.json` - VS Code debugging configurations
+
+### Output Files
+- `output/underwriting_template_pre_optimization_for_google_sheets.csv` - Pre-optimization template
+- `output/underwriting_template_post_optimization_for_google_sheets.csv` - Post-optimization template
+- `output/google_sheets_import_instructions.md` - Import and setup instructions
+
+## Key Features
+
+### Financial Calculations
+- Cash on Cash Return calculations
+- Appreciation projections (5Y)
+- Tax savings for W2 earners
+- Principal paydown analysis
+- Total return calculations
+- Mortgage payment calculations (PMT function)
+- Operating expense analysis
+
+### Client Scenarios
+- Sarah & Husband: $375K OOP max, 9% CoC target
+- Risahl: $175K OOP max, 5% CoC target
+- Top 10 properties per client with complete return analysis
+
+### Optimization Strategies
+- Price negotiation impact
+- Rental rate optimization
+- Self-management savings
+- Energy efficiency improvements
+- Curb appeal enhancements
+- Kitchen updates
+- Additional bedroom conversions
+
+### Dashboard Features
+- Overview tab with summary metrics
+- Financial projections with long-term forecasts
+- Property analysis with detailed P&L
+- Interactive charts and visualizations
+- Risk assessment and recommendations
+
+## Technical Stack
+- Python 3.x with pandas, numpy, dash, plotly
+- Financial calculations using numpy-financial
+- Web dashboard with Dash and Bootstrap
+- CSV generation for Google Sheets compatibility
+- VS Code debugging support
+
+## File Structure
+```
+zillow-scrape/
+├── main.py                          # Main entry point
+├── README.md                        # System documentation
+├── APPLICATION.md                   # Client scenario answers
+├── CHANGELOG.md                    # Version history
+├── requirements.txt                 # Python dependencies
+├── .vscode/launch.json             # Debug configurations
+├── src/
+│   ├── underwriting_engine.py      # Core calculations
+│   ├── property_sourcer.py         # Property data
+│   ├── automated_dashboard.py      # Web dashboard
+│   ├── create_csv_templates.py     # CSV generation
+│   └── create_google_sheets_final.py # Google Sheets CSV
+└── output/
+    ├── underwriting_template_pre_optimization_for_google_sheets.csv
+    ├── underwriting_template_post_optimization_for_google_sheets.csv
+    └── google_sheets_import_instructions.md
+```
+
+## Usage Patterns
+- Run analysis: `python3 main.py --mode analysis`
+- Launch dashboard: `python3 main.py --mode dashboard`
+- Run tests: `python3 main.py --mode test`
+- Generate CSV templates: `python3 src/create_csv_templates.py`
+- Generate Google Sheets CSV: `python3 src/create_google_sheets_final.py`
+
+## Key Data Models
+- PropertyData: Property characteristics and financial metrics
+- FinancialData: Cash flow and return calculations
+- OperatingExpenses: Monthly expense breakdown
+- UnderwritingResult: Complete analysis results
+- ClientScenario: Client requirements and constraints
+
+## Calculation Methodology
+- Exact replication of Google Sheets formulas
+- PMT function for mortgage calculations
+- Net Operating Income = Monthly Rent - Operating Expenses
+- Cash Flow = NOI - Monthly Mortgage Payment
+- CoC Return = Annual Cash Flow / Total Investment
+- Total Return = CoC + Appreciation + Tax Savings + Principal Paydown
