@@ -394,4 +394,4 @@ def update_top_properties_table(data):
 if __name__ == "__main__":
     print("Starting Real Estate Investment Analysis Dashboard...")
     print("Open your browser and go to: http://127.0.0.1:8050")
-    app.run_server(debug=True, host='0.0.0.0', port=8050)
+    app.run(debug=True, host='0.0.0.0', port=8050)
