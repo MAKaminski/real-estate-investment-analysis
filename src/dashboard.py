@@ -28,9 +28,37 @@ def create_sample_data():
     """Create sample data for the dashboard"""
     np.random.seed(42)
     
+    # Generate realistic addresses for Georgia properties
+    street_names = [
+        "Oak Ridge", "Pine Valley", "Maple Street", "Cedar Lane", "Elm Drive", 
+        "Willow Way", "Birch Road", "Cherry Circle", "Magnolia Avenue", "Dogwood Court",
+        "Hickory Street", "Poplar Lane", "Sycamore Drive", "Cypress Way", "Juniper Road",
+        "Laurel Circle", "Holly Avenue", "Ivy Court", "Rose Street", "Lily Lane",
+        "Daisy Drive", "Tulip Way", "Sunflower Road", "Marigold Circle", "Zinnia Avenue",
+        "Peachtree Street", "Piedmont Road", "Buckhead Lane", "Midtown Drive", "Downtown Way",
+        "Highland Road", "Virginia Circle", "Northside Avenue", "Westside Court", "Eastside Street",
+        "Brookhaven Lane", "Sandy Springs Drive", "Alpharetta Way", "Roswell Road", "Marietta Circle",
+        "Kennesaw Avenue", "Smyrna Court", "Vinings Street", "Dunwoody Lane", "Chamblee Drive"
+    ]
+    
+    street_suffixes = ["Street", "Avenue", "Lane", "Drive", "Way", "Road", "Circle", "Court", "Place", "Boulevard"]
+    city_names = ["Atlanta", "Marietta", "Roswell", "Alpharetta", "Sandy Springs", "Dunwoody", "Chamblee", "Smyrna", "Vinings", "Kennesaw"]
+    
     # Generate sample properties
     n_properties = 100
-    addresses = [f"Property {i+1}, City, State" for i in range(n_properties)]
+    addresses = []
+    
+    for i in range(n_properties):
+        street_num = np.random.randint(100, 9999)
+        street_name = np.random.choice(street_names)
+        suffix = np.random.choice(street_suffixes)
+        city = np.random.choice(city_names)
+        state = "GA"
+        zip_code = np.random.randint(30000, 32000)
+        
+        address = f"{street_num} {street_name} {suffix}, {city}, {state} {zip_code}"
+        addresses.append(address)
+    
     prices = np.random.uniform(150000, 300000, n_properties)
     cash_on_cash = np.random.uniform(5, 25, n_properties)
     appreciation = np.random.uniform(2, 8, n_properties)
@@ -38,9 +66,13 @@ def create_sample_data():
     principal_paydown = np.random.uniform(2, 6, n_properties)
     total_returns = cash_on_cash + appreciation + tax_savings + principal_paydown
     
+    # Add estimated rental income based on price
+    estimated_rental_income = prices * np.random.uniform(0.008, 0.012, n_properties)  # 0.8-1.2% of price per month
+    
     df = pd.DataFrame({
         'address': addresses,
         'price': prices,
+        'estimated_rental_income': estimated_rental_income,
         'cash_on_cash_return': cash_on_cash,
         'appreciation_return': appreciation,
         'tax_savings_return': tax_savings,
@@ -51,7 +83,9 @@ def create_sample_data():
         'down_payment': prices * 0.2,
         'sqft': np.random.uniform(1000, 2500, n_properties),
         'beds': np.random.randint(2, 5, n_properties),
-        'baths': np.random.randint(1, 4, n_properties)
+        'baths': np.random.randint(1, 4, n_properties),
+        'property_type': np.random.choice(['Single Family', 'Townhouse', 'Condo'], n_properties),
+        'year_built': np.random.randint(1980, 2020, n_properties)
     })
     
     return df
@@ -825,8 +859,13 @@ def update_projections_table(data, years, min_coc, max_investment):
         year10_appreciation = prop['price'] * (1.03 ** 10 - 1)
         year10_value = initial_value + year10_cash_flow + year10_appreciation
         
+        # Truncate address for display if too long
+        display_address = prop['address']
+        if len(display_address) > 40:
+            display_address = display_address[:37] + "..."
+        
         projections_data.append({
-            'Address': prop['address'],
+            'Address': display_address,
             'Initial Investment': f"${initial_investment:,.0f}",
             'Year 1 Value': f"${year1_value:,.0f}",
             'Year 5 Value': f"${year5_value:,.0f}",
@@ -863,6 +902,7 @@ def update_property_selector(data):
     options = []
     for i, prop in enumerate(data):
         address = prop.get('address', f'Property {i+1}')
+        # Show full address in dropdown
         options.append({'label': address, 'value': i})
     
     return options, 0 if options else None
@@ -1049,9 +1089,14 @@ def update_top_candidates_table(data):
         recommendation = analysis['recommendation']
         summary = analysis['summary']
         
+        # Truncate address for display if too long
+        display_address = prop['address']
+        if len(display_address) > 35:
+            display_address = display_address[:32] + "..."
+        
         table_data.append({
             'Rank': i + 1,
-            'Address': prop['address'][:30] + "..." if len(prop['address']) > 30 else prop['address'],
+            'Address': display_address,
             'Price': f"${prop['price']:,.0f}",
             'Cash-on-Cash': summary['key_metrics']['cash_on_cash_return'],
             'Worst Case': summary['key_metrics']['worst_case_cash_on_cash'],
