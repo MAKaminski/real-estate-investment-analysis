@@ -317,19 +317,68 @@ class PropertyDataCollector:
         """Collect property data from multiple sources"""
         all_properties = []
         
-        for location in locations:
-            logger.info(f"Collecting data for location: {location}")
+        # Check if we're focusing on Georgia
+        georgia_locations = [loc for loc in locations if 'GA' in loc.upper() or 'georgia' in loc.lower()]
+        
+        if georgia_locations:
+            logger.info("Georgia locations detected, using enhanced Georgia scraper")
+            from src.georgia_api_scraper import GeorgiaAPIPropertyScraper
+            georgia_scraper = GeorgiaAPIPropertyScraper()
             
-            # Get data from Realtor API
-            realtor_properties = self.get_realtor_data(location, limit=200)
-            all_properties.extend(realtor_properties)
+            # Extract city names from Georgia locations
+            georgia_cities = []
+            for location in georgia_locations:
+                if 'Atlanta' in location:
+                    georgia_cities.append('Atlanta')
+                elif 'Savannah' in location:
+                    georgia_cities.append('Savannah')
+                elif 'Athens' in location:
+                    georgia_cities.append('Athens')
+                elif 'Augusta' in location:
+                    georgia_cities.append('Augusta')
+                elif 'Macon' in location:
+                    georgia_cities.append('Macon')
+                elif 'Columbus' in location:
+                    georgia_cities.append('Columbus')
+                elif 'Albany' in location:
+                    georgia_cities.append('Albany')
+                else:
+                    georgia_cities.append('Atlanta')  # Default to Atlanta
             
-            # Get data from Zillow scraping
-            zillow_properties = self.scrape_zillow_data(location, limit=200)
-            all_properties.extend(zillow_properties)
+            # Use Georgia scraper for Georgia properties
+            georgia_properties = georgia_scraper.scrape_georgia_properties(georgia_cities, target_count)
+            all_properties.extend(georgia_properties)
             
-            # Add delay between locations
-            time.sleep(random.uniform(2, 5))
+            # Also try other locations if any
+            other_locations = [loc for loc in locations if loc not in georgia_locations]
+            for location in other_locations:
+                logger.info(f"Collecting data for location: {location}")
+                
+                # Get data from Realtor API
+                realtor_properties = self.get_realtor_data(location, limit=200)
+                all_properties.extend(realtor_properties)
+                
+                # Get data from Zillow scraping
+                zillow_properties = self.scrape_zillow_data(location, limit=200)
+                all_properties.extend(zillow_properties)
+                
+                # Add delay between locations
+                time.sleep(random.uniform(2, 5))
+        else:
+            # Use original method for non-Georgia locations
+            for location in locations:
+                logger.info(f"Collecting data for location: {location}")
+                
+                # Get data from Realtor API
+                realtor_properties = self.get_realtor_data(location, limit=200)
+                all_properties.extend(realtor_properties)
+                
+                # Get data from Zillow scraping
+                zillow_properties = self.scrape_zillow_data(location, limit=200)
+                all_properties.extend(zillow_properties)
+                
+                # Add delay between locations
+                time.sleep(random.uniform(2, 5))
         
         # Remove duplicates based on address
         unique_properties = []
