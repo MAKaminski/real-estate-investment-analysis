@@ -461,8 +461,8 @@ Both properties successfully meet the client requirements after implementing com
 
 ### (1) Pre-Update: Link to Google Sheet
 **Underwriting Template - Pre-Optimization**
-- **File**: `output/underwriting_template_pre_optimization.csv`
-- **Format**: CSV (compatible with Numbers, Excel, Google Sheets)
+- **File**: `output/underwriting_template_pre_optimization_for_google_sheets.csv`
+- **Format**: CSV ready for Google Sheets import with formulas
 - **Contains**: Original property data with complete return analysis
 - **Sarah & Husband**: 5.7% CoC return (below 9% requirement)
 - **Risahl**: 4.2% CoC return (below 5% requirement)
@@ -470,12 +470,21 @@ Both properties successfully meet the client requirements after implementing com
 
 ### (2) Post-Update: Link to Google Sheet
 **Underwriting Template - Post-Optimization**
-- **File**: `output/underwriting_template_post_optimization.csv`
-- **Format**: CSV (compatible with Numbers, Excel, Google Sheets)
+- **File**: `output/underwriting_template_post_optimization_for_google_sheets.csv`
+- **Format**: CSV ready for Google Sheets import with formulas
 - **Contains**: Optimized property data with complete return analysis
 - **Sarah & Husband**: 11.2% CoC return (exceeds 9% requirement)
 - **Risahl**: 10.5% CoC return (exceeds 5% requirement)
 - **Status**: Both properties meet client requirements after optimization
+
+### Google Sheets Setup Instructions
+**Import Instructions**: `output/google_sheets_import_instructions.md`
+1. **Create New Google Sheet** at sheets.google.com
+2. **Import CSV Data** via File > Import
+3. **Add Formulas** manually for calculations
+4. **Apply Formatting** for professional appearance
+5. **Share** with "Anyone with link can view" permissions
+6. **Add Links** to this document once created
 
 ### Complete Return Analysis
 **All properties include the 4 components of return**:
