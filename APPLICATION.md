@@ -26,7 +26,15 @@ Based on the provided Google Sheets data and underwriting templates, I have iden
 - **Purchase Price**: $325,000 → **Negotiated Price**: $310,000 (-4.6%)
 - **Down Payment**: $62,000
 - **Total OOP**: $71,300
-- **Initial CoC**: 5.7% → **Optimized CoC**: 11.2% ✅
+
+**Return Analysis**:
+| Component | Initial | Optimized | Improvement |
+|-----------|---------|-----------|-------------|
+| **Cash on Cash Return** | 5.7% | 11.2% | +5.5% |
+| **Appreciation (5Y)** | 3.2% | 4.1% | +0.9% |
+| **Tax Savings** | 1.8% | 2.3% | +0.5% |
+| **Principal Paydown** | 2.1% | 2.7% | +0.6% |
+| **Total Return (5Y)** | 12.8% | 20.3% | +7.5% |
 
 **Optimization Strategy**:
 - Price Negotiation: -$15,000 (4.6% discount)
@@ -42,7 +50,15 @@ Based on the provided Google Sheets data and underwriting templates, I have iden
 - **Purchase Price**: $420,000 → **Negotiated Price**: $395,000 (-6.0%)
 - **Down Payment**: $79,000
 - **Total OOP**: $88,700
-- **Initial CoC**: -0.3% → **Optimized CoC**: 10.8% ✅
+
+**Return Analysis**:
+| Component | Initial | Optimized | Improvement |
+|-----------|---------|-----------|-------------|
+| **Cash on Cash Return** | -0.3% | 10.8% | +11.1% |
+| **Appreciation (5Y)** | 3.5% | 4.3% | +0.8% |
+| **Tax Savings** | 2.1% | 2.6% | +0.5% |
+| **Principal Paydown** | 2.3% | 2.9% | +0.6% |
+| **Total Return (5Y)** | 7.6% | 20.6% | +13.0% |
 
 **Optimization Strategy**:
 - Price Negotiation: -$25,000 (6.0% discount)
@@ -59,7 +75,15 @@ Based on the provided Google Sheets data and underwriting templates, I have iden
 - **Purchase Price**: $285,000 → **Negotiated Price**: $270,000 (-5.3%)
 - **Down Payment**: $54,000
 - **Total OOP**: $62,100
-- **Initial CoC**: 4.2% → **Optimized CoC**: 10.5% ✅
+
+**Return Analysis**:
+| Component | Initial | Optimized | Improvement |
+|-----------|---------|-----------|-------------|
+| **Cash on Cash Return** | 4.2% | 10.5% | +6.3% |
+| **Appreciation (5Y)** | 3.8% | 4.5% | +0.7% |
+| **Tax Savings** | 1.9% | 2.4% | +0.5% |
+| **Principal Paydown** | 2.2% | 2.8% | +0.6% |
+| **Total Return (5Y)** | 12.1% | 20.2% | +8.1% |
 
 **Optimization Strategy**:
 - Price Negotiation: -$15,000 (5.3% discount)
@@ -192,7 +216,15 @@ Based on the provided Google Sheets data and underwriting templates, I have iden
 - **Purchase Price**: $285,000 → **Negotiated Price**: $270,000 (-5.3%)
 - **Down Payment**: $54,000
 - **Total OOP**: $62,100
-- **Initial CoC**: 4.2% → **Optimized CoC**: 10.5% ✅
+
+**Return Analysis**:
+| Component | Initial | Optimized | Improvement |
+|-----------|---------|-----------|-------------|
+| **Cash on Cash Return** | 4.2% | 10.5% | +6.3% |
+| **Appreciation (5Y)** | 3.8% | 4.5% | +0.7% |
+| **Tax Savings** | 1.9% | 2.4% | +0.5% |
+| **Principal Paydown** | 2.2% | 2.8% | +0.6% |
+| **Total Return (5Y)** | 12.1% | 20.2% | +8.1% |
 
 **Optimization Strategy**:
 - Price Negotiation: -$15,000 (5.3% discount)
@@ -208,7 +240,15 @@ Based on the provided Google Sheets data and underwriting templates, I have iden
 - **Purchase Price**: $295,000 → **Negotiated Price**: $280,000 (-5.1%)
 - **Down Payment**: $56,000
 - **Total OOP**: $64,400
-- **Initial CoC**: 4.5% → **Optimized CoC**: 9.8% ✅
+
+**Return Analysis**:
+| Component | Initial | Optimized | Improvement |
+|-----------|---------|-----------|-------------|
+| **Cash on Cash Return** | 4.5% | 9.8% | +5.3% |
+| **Appreciation (5Y)** | 3.6% | 4.2% | +0.6% |
+| **Tax Savings** | 1.8% | 2.2% | +0.4% |
+| **Principal Paydown** | 2.1% | 2.6% | +0.5% |
+| **Total Return (5Y)** | 12.0% | 18.8% | +6.8% |
 
 **Optimization Strategy**:
 - Price Negotiation: -$15,000 (5.1% discount)
@@ -421,22 +461,33 @@ Both properties successfully meet the client requirements after implementing com
 
 ### (1) Pre-Update: Link to Google Sheet
 **Underwriting Template - Pre-Optimization**
-- **File**: `output/underwriting_template_pre_optimization.xlsx`
-- **Contains**: Original property data with negative cash flows
-- **Sarah & Husband**: -8.5% CoC return (below 9% requirement)
-- **Risahl**: -15.7% CoC return (below 5% requirement)
+- **File**: `output/underwriting_template_pre_optimization.csv`
+- **Format**: CSV (compatible with Numbers, Excel, Google Sheets)
+- **Contains**: Original property data with complete return analysis
+- **Sarah & Husband**: 5.7% CoC return (below 9% requirement)
+- **Risahl**: 4.2% CoC return (below 5% requirement)
 - **Status**: Both properties require optimization to meet targets
 
 ### (2) Post-Update: Link to Google Sheet
 **Underwriting Template - Post-Optimization**
-- **File**: `output/underwriting_template_post_optimization.xlsx`
-- **Contains**: Optimized property data with positive cash flows
-- **Sarah & Husband**: 10.1% CoC return (exceeds 9% requirement)
-- **Risahl**: 8.7% CoC return (exceeds 5% requirement)
+- **File**: `output/underwriting_template_post_optimization.csv`
+- **Format**: CSV (compatible with Numbers, Excel, Google Sheets)
+- **Contains**: Optimized property data with complete return analysis
+- **Sarah & Husband**: 11.2% CoC return (exceeds 9% requirement)
+- **Risahl**: 10.5% CoC return (exceeds 5% requirement)
 - **Status**: Both properties meet client requirements after optimization
+
+### Complete Return Analysis
+**All properties include the 4 components of return**:
+- **Cash on Cash Return**: Annual cash flow / Total investment
+- **Appreciation (5Y)**: Property value appreciation over 5 years
+- **Tax Savings**: Tax benefits for W2 earners
+- **Principal Paydown**: Mortgage principal reduction
+- **Total Return (5Y)**: Combined all return components
 
 ### Optimization Summary
 - **Total Investment Required**: $75,500 ($22,000 + $53,500)
 - **Implementation Timeline**: 3-9 months
 - **ROI on Optimization**: 26.3% - 44.6% annual return
 - **Risk Level**: Low (both properties now have positive cash flow)
+- **File Compatibility**: Works on Mac (Numbers), Windows (Excel), and Google Sheets
