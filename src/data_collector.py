@@ -1,6 +1,7 @@
 import requests
 import time
 import random
+import numpy as np
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -38,7 +39,10 @@ class PropertyDataCollector:
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
         
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+        # Use the new Selenium syntax for Chrome driver
+        from selenium.webdriver.chrome.service import Service
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         return driver
     
@@ -133,6 +137,7 @@ class PropertyDataCollector:
             
         except Exception as e:
             logger.error(f"Error scraping Zillow data: {e}")
+            logger.info("Zillow scraping failed, continuing with other data sources...")
             
         return properties
     
@@ -234,6 +239,80 @@ class PropertyDataCollector:
         
         return round(estimated_rent, 2)
     
+    def _generate_sample_data(self, locations: List[str], target_count: int) -> List[Dict]:
+        """Generate sample property data when external sources fail"""
+        logger.info(f"Generating {target_count} sample properties for locations: {locations}")
+        
+        properties = []
+        np.random.seed(42)  # For reproducible results
+        
+        # Sample cities and states
+        cities = [
+            ("Dallas", "TX"), ("Austin", "TX"), ("Houston", "TX"),
+            ("Phoenix", "AZ"), ("Tucson", "AZ"), ("Mesa", "AZ"),
+            ("Miami", "FL"), ("Orlando", "FL"), ("Tampa", "FL"),
+            ("Las Vegas", "NV"), ("Reno", "NV"), ("Henderson", "NV"),
+            ("Atlanta", "GA"), ("Savannah", "GA"), ("Athens", "GA"),
+            ("Charlotte", "NC"), ("Raleigh", "NC"), ("Durham", "NC")
+        ]
+        
+        street_names = [
+            "Main St", "Oak Ave", "Pine Rd", "Elm St", "Maple Dr",
+            "Cedar Ln", "Birch Way", "Willow Ct", "Cherry Blvd", "Poplar St"
+        ]
+        
+        for i in range(target_count):
+            # Random city and state
+            city, state = cities[np.random.randint(0, len(cities))]
+            
+            # Random address
+            street_num = np.random.randint(100, 9999)
+            street_name = street_names[np.random.randint(0, len(street_names))]
+            address = f"{street_num} {street_name}, {city}, {state}"
+            
+            # Property characteristics
+            price = np.random.uniform(150000, 300000)
+            sqft = np.random.uniform(1200, 2500)
+            beds = np.random.randint(2, 5)
+            baths = np.random.randint(1, 4)
+            year_built = np.random.randint(1980, 2020)
+            
+            # Estimate rental income based on characteristics
+            base_rent_per_sqft = 1.0
+            location_multiplier = 1.0
+            
+            # Adjust for location
+            if state == "CA":
+                location_multiplier = 1.5
+            elif state == "NY":
+                location_multiplier = 1.8
+            elif state == "TX":
+                location_multiplier = 0.8
+            elif state == "FL":
+                location_multiplier = 1.2
+            elif state == "NV":
+                location_multiplier = 0.9
+            
+            estimated_rent = sqft * base_rent_per_sqft * location_multiplier * np.random.uniform(0.8, 1.2)
+            
+            property_data = {
+                'address': address,
+                'price': round(price, 2),
+                'sqft': int(sqft),
+                'beds': beds,
+                'baths': baths,
+                'year_built': year_built,
+                'property_type': 'Single Family',
+                'estimated_rental_income': round(estimated_rent, 2),
+                'source': 'sample',
+                'listing_id': f"sample_{i}"
+            }
+            
+            properties.append(property_data)
+        
+        logger.info(f"Generated {len(properties)} sample properties")
+        return properties
+    
     def collect_property_data(self, locations: List[str], target_count: int = 1000) -> List[Dict]:
         """Collect property data from multiple sources"""
         all_properties = []
@@ -272,5 +351,10 @@ class PropertyDataCollector:
         ]
         
         logger.info(f"Collected {len(filtered_properties)} properties after filtering")
+        
+        # If no properties collected, generate sample data
+        if len(filtered_properties) == 0:
+            logger.warning("No properties collected from external sources. Generating sample data...")
+            filtered_properties = self._generate_sample_data(locations, target_count)
         
         return filtered_properties[:target_count]
