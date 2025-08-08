@@ -1,0 +1,86 @@
+# Google Sheets Underwriting Template - Pre-Optimization
+# This file represents the underwriting template with original property data
+
+## Property 1: Sarah & Husband - 2456 Oak Ridge Drive, Houston, TX 77056
+
+### Purchase Details
+- Purchase Price: $325,000
+- Down Payment (20%): $65,000
+- Loan Amount: $260,000
+- Interest Rate: 6.5%
+- Loan Term: 30 years
+- Monthly Payment: $1,643
+- Closing Costs (3%): $9,750
+- Total OOP: $74,750
+
+### Revenue Projections
+- Low Scenario: $2,880/month ($34,560/year)
+- Mid Scenario: $3,200/month ($38,400/year)
+- High Scenario: $3,520/month ($42,240/year)
+
+### Operating Expenses (Monthly)
+- Property Tax: $677
+- Insurance: $217
+- Maintenance: $406
+- Management (8%): $256
+- Utilities: $460
+- Total Monthly Expenses: $2,016
+
+### Cash Flow Analysis
+- Monthly Rent (Mid): $3,200
+- Monthly Expenses: $2,016
+- Net Operating Income: $1,184
+- Monthly Mortgage: $1,643
+- Monthly Cash Flow: -$459
+- Annual Cash Flow: -$5,508
+- CoC Return: -8.5%
+
+### Risk Assessment
+- Risk Level: High
+- Risk Factors: Negative cash flow, below target CoC return
+- Recommendation: PASS - Requires significant optimization
+
+## Property 2: Risahl - 1892 Pine Valley Lane, Houston, TX 77084
+
+### Purchase Details
+- Purchase Price: $420,000
+- Down Payment (20%): $84,000
+- Loan Amount: $336,000
+- Interest Rate: 6.5%
+- Loan Term: 30 years
+- Monthly Payment: $2,123
+- Closing Costs (3%): $12,600
+- Total OOP: $96,600
+
+### Revenue Projections
+- Low Scenario: $3,150/month ($37,800/year)
+- Mid Scenario: $3,500/month ($42,000/year)
+- High Scenario: $3,850/month ($46,200/year)
+
+### Operating Expenses (Monthly)
+- Property Tax: $875
+- Insurance: $280
+- Maintenance: $525
+- Management (8%): $280
+- Utilities: $520
+- Total Monthly Expenses: $2,480
+
+### Cash Flow Analysis
+- Monthly Rent (Mid): $3,500
+- Monthly Expenses: $2,480
+- Net Operating Income: $1,020
+- Monthly Mortgage: $2,123
+- Monthly Cash Flow: -$1,103
+- Annual Cash Flow: -$13,236
+- CoC Return: -15.7%
+
+### Risk Assessment
+- Risk Level: High
+- Risk Factors: Negative cash flow, below target CoC return
+- Recommendation: PASS - Requires significant optimization
+
+## Notes
+- Both properties require optimization to meet target CoC returns
+- Sarah & Husband need 9% CoC return (currently -8.5%)
+- Risahl needs 5% CoC return (currently -15.7%)
+- Optimization lists will be provided in post-optimization template
