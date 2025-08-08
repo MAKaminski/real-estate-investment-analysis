@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r src/requirements.txt
+    
+    - name: Run tests
+      run: |
+        python test_installation.py
+        python run_example.py
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## Real Estate Investment Analysis Tool v${{ github.ref_name }}
+          
+          ### Features
+          - Four key return metrics calculation
+          - Large-scale property analysis (1000+ properties)
+          - Multiple data sources integration
+          - Excel/CSV export functionality
+          - Interactive web dashboard
+          - VS Code debugging support
+          
+          ### Installation
+          ```bash
+          git clone https://github.com/MAKaminski/real-estate-investment-analysis.git
+          cd real-estate-investment-analysis
+          python setup.py
+          ```
+          
+          ### Quick Start
+          ```bash
+          python test_installation.py
+          python run_example.py
+          python main.py --locations "Dallas, TX" --target-count 1000
+          python dashboard.py
+          ```
+          
+          See [README.md](https://github.com/MAKaminski/real-estate-investment-analysis/blob/main/README.md) for full documentation.
+        draft: false
+        prerelease: false
