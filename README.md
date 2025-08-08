@@ -274,22 +274,37 @@ EXPORTED FILES:
 ### Common Issues
 
 1. **No properties collected**:
-   - Check internet connection
+   - The tool will automatically generate sample data if external sources fail
+   - Check internet connection for API access
    - Verify location names are correct
    - Try different locations
 
 2. **Web scraping errors**:
-   - Ensure Chrome browser is installed
+   - Selenium WebDriver issues are automatically handled
+   - The tool continues with other data sources when scraping fails
+   - Ensure Chrome browser is installed for web scraping
    - Check if target websites are accessible
-   - Try running with fewer properties
 
 3. **API rate limiting**:
    - Add delays between requests
    - Use API keys for higher limits
    - Reduce target property count
+   - The tool will fall back to sample data if APIs are unavailable
+
+4. **Selenium compatibility**:
+   - Updated to use new Service-based Chrome driver initialization
+   - Compatible with Selenium 4.10.0+
+   - Automatic fallback when web scraping fails
 
 ### Logs
 Check `real_estate_analysis.log` for detailed error messages and debugging information.
+
+### Fallback Mechanism
+The tool includes robust fallback mechanisms:
+- If web scraping fails, it continues with API data
+- If no external data is available, it generates realistic sample data
+- All financial calculations work with any data source
+- The tool never fails completely - it always produces results
 
 ## Contributing
 
