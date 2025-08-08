@@ -72,6 +72,7 @@ app.layout = dbc.Container([
             dbc.Tabs([
                 dbc.Tab(label="Overview", tab_id="overview"),
                 dbc.Tab(label="Financial Projections", tab_id="projections"),
+                dbc.Tab(label="Property Analysis", tab_id="property_analysis"),
             ], id="tabs", active_tab="overview")
         ])
     ], className="mb-4"),
@@ -96,6 +97,8 @@ def render_tab_content(active_tab, data):
         return create_overview_tab(data)
     elif active_tab == "projections":
         return create_projections_tab(data)
+    elif active_tab == "property_analysis":
+        return create_property_analysis_tab(data)
     return html.Div("Select a tab")
 
 def create_overview_tab(data):
@@ -346,6 +349,97 @@ def create_projections_tab(data):
                     dbc.CardHeader("Detailed Financial Projections"),
                     dbc.CardBody([
                         html.Div(id="projections-table")
+                    ])
+                ])
+            ])
+        ], className="mb-4")
+    ]
+
+def create_property_analysis_tab(data):
+    """Create the property analysis tab content"""
+    return [
+        # Property Analysis Header
+        dbc.Row([
+            dbc.Col([
+                html.H2("Detailed Property Analysis", className="text-center mb-4"),
+                html.P("Comprehensive P&L analysis with tax implications and worst-case scenarios", 
+                      className="text-center text-muted")
+            ])
+        ], className="mb-4"),
+        
+        # Property Selection
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Property Selection"),
+                    dbc.CardBody([
+                        html.Label("Select Property for Detailed Analysis:"),
+                        dcc.Dropdown(
+                            id="property-selector",
+                            placeholder="Choose a property...",
+                            style={'marginBottom': '20px'}
+                        ),
+                        html.Div(id="property-image-container", className="text-center")
+                    ])
+                ])
+            ], width=4),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Investment Recommendation"),
+                    dbc.CardBody([
+                        html.Div(id="recommendation-container")
+                    ])
+                ])
+            ], width=8)
+        ], className="mb-4"),
+        
+        # P&L Analysis
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Monthly P&L Statement"),
+                    dbc.CardBody([
+                        html.Div(id="monthly-pl-container")
+                    ])
+                ])
+            ], width=6),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Annual P&L Statement"),
+                    dbc.CardBody([
+                        html.Div(id="annual-pl-container")
+                    ])
+                ])
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Tax Analysis and Worst Case
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Tax Implications (W2 Earner)"),
+                    dbc.CardBody([
+                        html.Div(id="tax-analysis-container")
+                    ])
+                ])
+            ], width=6),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Worst-Case Scenario Analysis"),
+                    dbc.CardBody([
+                        html.Div(id="worst-case-container")
+                    ])
+                ])
+            ], width=6)
+        ], className="mb-4"),
+        
+        # Top Properties Table
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Top Investment Candidates"),
+                    dbc.CardBody([
+                        html.Div(id="top-candidates-table")
                     ])
                 ])
             ])
@@ -754,6 +848,229 @@ def update_projections_table(data, years, min_coc, max_investment):
         return table
     else:
         return html.Div("No projections available")
+
+# Property Analysis Callbacks
+@app.callback(
+    Output("property-selector", "options"),
+    Output("property-selector", "value"),
+    Input("property-data", "data")
+)
+def update_property_selector(data):
+    """Update property selector dropdown"""
+    if not data:
+        return [], None
+    
+    options = []
+    for i, prop in enumerate(data):
+        address = prop.get('address', f'Property {i+1}')
+        options.append({'label': address, 'value': i})
+    
+    return options, 0 if options else None
+
+@app.callback(
+    Output("property-image-container", "children"),
+    Output("recommendation-container", "children"),
+    Output("monthly-pl-container", "children"),
+    Output("annual-pl-container", "children"),
+    Output("tax-analysis-container", "children"),
+    Output("worst-case-container", "children"),
+    Input("property-selector", "value"),
+    Input("property-data", "data")
+)
+def update_property_analysis(selected_index, data):
+    """Update property analysis components"""
+    if selected_index is None or not data or selected_index >= len(data):
+        return html.Div("No property selected"), html.Div("No data"), html.Div("No data"), html.Div("No data"), html.Div("No data"), html.Div("No data")
+    
+    # Get selected property
+    property_data = data[selected_index]
+    
+    # Import and use property analyzer
+    from src.property_analyzer import PropertyAnalyzer
+    from src.property_images import PropertyImageGenerator
+    
+    analyzer = PropertyAnalyzer()
+    image_generator = PropertyImageGenerator()
+    
+    # Generate analysis
+    analysis = analyzer.calculate_detailed_pl(property_data)
+    
+    # Generate property image
+    image_data = image_generator.generate_property_image(property_data)
+    
+    # Create components
+    image_component = html.Img(src=image_data, style={'maxWidth': '100%', 'height': 'auto'})
+    
+    recommendation_component = create_recommendation_component(analysis['recommendation'])
+    monthly_pl_component = create_monthly_pl_component(analysis['monthly_pl'])
+    annual_pl_component = create_annual_pl_component(analysis['annual_pl'])
+    tax_component = create_tax_component(analysis['tax_analysis'])
+    worst_case_component = create_worst_case_component(analysis['worst_case'])
+    
+    return image_component, recommendation_component, monthly_pl_component, annual_pl_component, tax_component, worst_case_component
+
+def create_recommendation_component(recommendation):
+    """Create recommendation component"""
+    score = recommendation['score']
+    action = recommendation['recommendation']
+    confidence = recommendation['confidence']
+    reasons = recommendation['reasons']
+    
+    # Color coding
+    if action == "STRONG BUY":
+        color = "success"
+    elif action == "BUY":
+        color = "primary"
+    elif action == "HOLD":
+        color = "warning"
+    else:
+        color = "danger"
+    
+    return [
+        dbc.Alert([
+            html.H4(f"{action}", className="alert-heading"),
+            html.P(f"Confidence: {confidence} | Score: {score}/100")
+        ], color=color, className="mb-3"),
+        html.H6("Analysis Reasons:"),
+        html.Ul([html.Li(reason) for reason in reasons])
+    ]
+
+def create_monthly_pl_component(monthly_pl):
+    """Create monthly P&L component"""
+    revenue = monthly_pl['revenue']['gross_rental_income']
+    expenses = monthly_pl['operating_expenses']['total']
+    debt_service = monthly_pl['debt_service']['total_payment']
+    net_income = monthly_pl['net_income']
+    
+    return [
+        html.H6("Revenue:"),
+        html.P(f"Gross Rental Income: ${revenue:,.2f}"),
+        html.Hr(),
+        html.H6("Operating Expenses:"),
+        html.P(f"Total: ${expenses:,.2f}"),
+        html.Hr(),
+        html.H6("Debt Service:"),
+        html.P(f"Total Payment: ${debt_service:,.2f}"),
+        html.Hr(),
+        html.H6("Net Income:"),
+        html.P(f"${net_income:,.2f}", style={'fontWeight': 'bold', 'color': 'green' if net_income > 0 else 'red'})
+    ]
+
+def create_annual_pl_component(annual_pl):
+    """Create annual P&L component"""
+    revenue = annual_pl['revenue']['gross_rental_income']
+    expenses = annual_pl['operating_expenses']['total']
+    debt_service = annual_pl['debt_service']['total_payment']
+    depreciation = annual_pl['depreciation']
+    net_income = annual_pl['net_income']
+    cash_on_cash = annual_pl['cash_on_cash_return']
+    
+    return [
+        html.H6("Annual Revenue:"),
+        html.P(f"Gross Rental Income: ${revenue:,.2f}"),
+        html.Hr(),
+        html.H6("Annual Expenses:"),
+        html.P(f"Operating Expenses: ${expenses:,.2f}"),
+        html.P(f"Debt Service: ${debt_service:,.2f}"),
+        html.P(f"Depreciation: ${depreciation:,.2f}"),
+        html.Hr(),
+        html.H6("Returns:"),
+        html.P(f"Net Income: ${net_income:,.2f}"),
+        html.P(f"Cash-on-Cash Return: {cash_on_cash:.2f}%")
+    ]
+
+def create_tax_component(tax_analysis):
+    """Create tax analysis component"""
+    deductions = tax_analysis['deductible_expenses']
+    total_deductions = tax_analysis['total_deductions']
+    tax_savings = tax_analysis['tax_savings']
+    adjusted_net_income = tax_analysis['adjusted_net_income']
+    adjusted_cash_on_cash = tax_analysis['adjusted_cash_on_cash_return']
+    
+    return [
+        html.H6("Deductible Expenses:"),
+        html.P(f"Mortgage Interest: ${deductions['mortgage_interest']:,.2f}"),
+        html.P(f"Property Tax: ${deductions['property_tax']:,.2f}"),
+        html.P(f"Depreciation: ${deductions['depreciation']:,.2f}"),
+        html.P(f"Property Management: ${deductions['property_management']:,.2f}"),
+        html.Hr(),
+        html.H6("Tax Savings:"),
+        html.P(f"Federal: ${tax_savings['federal']:,.2f}"),
+        html.P(f"State: ${tax_savings['state']:,.2f}"),
+        html.P(f"Local: ${tax_savings['local']:,.2f}"),
+        html.P(f"Total: ${tax_savings['total']:,.2f}"),
+        html.Hr(),
+        html.H6("Adjusted Returns:"),
+        html.P(f"Adjusted Net Income: ${adjusted_net_income:,.2f}"),
+        html.P(f"Adjusted Cash-on-Cash: {adjusted_cash_on_cash:.2f}%")
+    ]
+
+def create_worst_case_component(worst_case):
+    """Create worst-case scenario component"""
+    assumptions = worst_case['assumptions']
+    revenue = worst_case['revenue']
+    expenses = worst_case['expenses']
+    net_income = worst_case['net_income']
+    returns = worst_case['returns']
+    
+    return [
+        html.H6("Worst-Case Assumptions:"),
+        html.P(f"Vacancy Rate: {assumptions['vacancy_rate']*100:.0f}%"),
+        html.P(f"Rent Decrease: {assumptions['rent_decrease']*100:.0f}%"),
+        html.P(f"Expense Increase: {assumptions['expense_increase']*100:.0f}%"),
+        html.P(f"Interest Rate Increase: {assumptions['interest_rate_increase']*100:.0f}%"),
+        html.Hr(),
+        html.H6("Worst-Case Results:"),
+        html.P(f"Gross Income: ${revenue['gross_income']:,.2f}"),
+        html.P(f"Expenses: ${expenses['worst_case_expenses']:,.2f}"),
+        html.P(f"Net Income: ${net_income['worst_case']:,.2f}"),
+        html.P(f"Cash-on-Cash Return: {returns['worst_case_cash_on_cash']:.2f}%")
+    ]
+
+@app.callback(
+    Output("top-candidates-table", "children"),
+    Input("property-data", "data")
+)
+def update_top_candidates_table(data):
+    """Update top candidates table"""
+    if not data:
+        return html.Div("No data available")
+    
+    # Import and use property analyzer
+    from src.property_analyzer import PropertyAnalyzer
+    
+    analyzer = PropertyAnalyzer()
+    analyses = analyzer.analyze_properties(data)
+    
+    # Create table data
+    table_data = []
+    for i, analysis in enumerate(analyses[:10]):  # Top 10
+        prop = analysis['property_data']
+        recommendation = analysis['recommendation']
+        summary = analysis['summary']
+        
+        table_data.append({
+            'Rank': i + 1,
+            'Address': prop['address'][:30] + "..." if len(prop['address']) > 30 else prop['address'],
+            'Price': f"${prop['price']:,.0f}",
+            'Cash-on-Cash': summary['key_metrics']['cash_on_cash_return'],
+            'Worst Case': summary['key_metrics']['worst_case_cash_on_cash'],
+            'Recommendation': recommendation['recommendation'],
+            'Score': f"{recommendation['score']}/100"
+        })
+    
+    if table_data:
+        table = dbc.Table.from_dataframe(
+            pd.DataFrame(table_data),
+            striped=True,
+            bordered=True,
+            hover=True,
+            responsive=True,
+            className="mt-3"
+        )
+        return table
+    else:
+        return html.Div("No candidates available")
 
 if __name__ == "__main__":
     import socket
